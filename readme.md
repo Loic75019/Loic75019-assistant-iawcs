@@ -1,130 +1,169 @@
-Voici un exemple complet de **README.md** en français, parfaitement adapté à ton projet de chatbot IA personnel avec LangChain, Streamlit, mémoire conversationnelle, et outils intégrés :
+# 🤖 Assistant IA Personnel – LangChain + Streamlit + FastAPI
+
+Un assistant conversationnel intelligent et polyvalent, capable de :
+
+- 💬 Mener une conversation fluide et personnalisée
+- 🧠 Mémoriser le prénom et le contexte utilisateur
+- 📄 Lire et analyser des fichiers PDF
+- 🔍 Rechercher des infos sur Internet
+- ✅ Gérer une TODO-list
+- 🧮 Faire des calculs
+- 🌐 Répondre à distance via une API REST sécurisée
 
 ---
 
-# 🤖 Agent IA Personnel avec LangChain & Streamlit
+## 🚀 Démo publique
 
-Un assistant conversationnel intelligent, **amical** et **contextuel**, capable de :
+- Interface utilisateur (Streamlit) :  
+  👉 http://15.237.160.172:8501
 
-* 💬 Mener une conversation fluide et personnalisée
-* 🧠 Se souvenir du prénom et des infos de l'utilisateur
-* 📄 Lire et analyser des fichiers PDF
-* 🔍 Rechercher des infos sur Internet
-* ✅ Gérer une liste de tâches
-* 🧮 Faire des calculs
-
----
-
-## 🚀 Démo rapide
-
-```bash
-streamlit run app.py
-```
+- API REST FastAPI :  
+  👉 http://15.237.160.172:8000/docs (Swagger)
 
 ---
 
 ## 📦 Fonctionnalités
 
-| Fonction                         | Description                                                      |
-| -------------------------------- | ---------------------------------------------------------------- |
-| 💬 **Chat contextuel**           | Conversation fluide avec mémoire (prénom, intentions, etc.)      |
-| 🧠 **Mémoire conversationnelle** | Conservation des échanges récents et recherche dans l'historique |
-| 📄 **Lecture de PDF**            | Posez des questions sur le contenu d’un fichier PDF              |
-| 🔍 **Recherche Web**             | Utilisation de DuckDuckGo pour chercher des infos en direct      |
-| ✅ **TODO list**                  | Ajouter, lister, supprimer ou terminer des tâches                |
-| 🧮 **Calculatrice**              | Évaluation sécurisée d'expressions mathématiques                 |
-| 🔁 **Commande `/reset`**         | Réinitialise mémoire et contexte utilisateur                     |
+| Fonction               | Description |
+|------------------------|-------------|
+| 💬 Chat contextuel     | Mémoire de conversation et prénom |
+| 🧠 Mémoire conversationnelle | Historique, FAISS, contexte |
+| 📄 Lecture de PDF       | Posez des questions sur un PDF |
+| 🔍 Recherche Web       | Recherche via DuckDuckGo |
+| ✅ Liste de tâches     | Ajouter/supprimer des TODOs |
+| 🧮 Calculatrice        | Calculs mathématiques |
+| 🔐 API sécurisée par token | Accès REST protégé par `Authorization: Bearer` |
 
 ---
 
-## 🧱 Stack technique
+## 🛠️ Stack technique
 
-* [LangChain](https://www.langchain.com/) – orchestration LLM et mémoire
-* [OpenAI GPT-3.5 / GPT-4](https://platform.openai.com/docs) – modèle de langage
-* [Streamlit](https://streamlit.io/) – interface web légère
-* [DuckDuckGo Search](https://pypi.org/project/duckduckgo-search/) – recherche web ou SERPER API
-* [FAISS](https://github.com/facebookresearch/faiss) – indexation vectorielle pour la mémoire avancée
-* [ChromaDB (optionnel)](https://www.trychroma.com/) – support vector stores
+- LangChain (agent, outils, mémoire)
+- OpenAI GPT-3.5 / GPT-4
+- Streamlit (interface utilisateur)
+- FastAPI + Uvicorn (serveur API)
+- DuckDuckGo Search API
+- FAISS pour l’indexation vectorielle
+- tmux pour garder le serveur actif après déconnexion
 
 ---
 
-## 🛠️ Installation
+## 🧱 Déploiement sur une instance EC2 (Ubuntu)
 
-### 1. Cloner le repo
+### 1. 🧑‍💻 Cloner le projet
 
 ```bash
-git clone https://github.com/votre-utilisateur/agent-ia-personnel.git
-cd agent-ia-personnel
+git clone https://github.com/Loic75019/Loic75019-assistant-iawcs.git
+cd Loic75019-assistant-iawcs
 ```
 
-### 2. Installer les dépendances
+### 2. 🐍 Créer un environnement Python
 
 ```bash
-python -m venv venv
-source venv/bin/activate  # ou venv\Scripts\activate sous Windows
-
+sudo apt update && sudo apt install python3.10-venv git curl tmux -y
+python3 -m venv venv
+source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 3. Configurer l’API OpenAI
+### 3. 🔐 Configurer les clés
 
 Créer un fichier `.env` :
 
-```ini
-OPENAI_API_KEY=sk-xxxxxxxxxxxxxxxxxxxx
+```env
+OPENAI_API_KEY=sk-xxxxxxxxxxxxxxxxx
+HUGGINGFACEHUB_API_TOKEN=hf_yyyyyyyyyyyyyy
+API_TOKEN=xxx
 ```
+
+> ⚠️ Ne jamais versionner ce fichier dans GitHub !
 
 ---
 
-## 🧪 Exemple de scénario
+## 🌐 Lancer l'application
 
-> Utilisateur : Salut, je m'appelle Loic
-> Assistant : Enchanté Loic ! Comment puis-je t'aider aujourd'hui ?
-> Utilisateur : J’aimerais apprendre à coder
-> Assistant : Super Loic ! Python, ça te tente pour débuter ? 😊
+### Interface utilisateur (Streamlit)
+
+```bash
+tmux new -s streamlit
+source venv/bin/activate
+streamlit run app.py --server.port 8501 --server.address 0.0.0.0
+```
+
+Puis détacher avec `Ctrl + B`, puis `D`.
+
+➡️ Accessible sur : `http://<IP>:8501`
+
+---
+
+### API REST (FastAPI)
+
+```bash
+tmux new -s api
+source venv/bin/activate
+uvicorn api:app --host 0.0.0.0 --port 8000
+```
+
+➡️ Accessible sur : `http://<IP>:8000/docs`
+
+---
+
+## 🧪 Tester l’API avec `curl`
+
+```bash
+curl -X POST http://<IP>:8000/ask \
+  -H "Authorization: Bearer cle_secrete_api_assitant_wcs" \
+  -H "Content-Type: application/json" \
+  -d '{"question": "Quelle est la capitale de la France ?"}'
+```
 
 ---
 
 ## 📂 Structure du projet
 
-```
 .
-├── app.py                         # Interface Streamlit
-├── agent.py                       # Agent principal avec mémoire + outils
-├── tools/                         # Tous les outils (PDF, TODO, calcul, recherche)
-├── memory/                        # Mémoire avancée + gestion index FAISS
-├── chat_history.json       # Historique sauvegardé
-├── requirements.txt               # Dépendances
-└── .env                           # Clé API OpenAI
-```
+├── app.py                   # Interface Streamlit
+├── api.py                   # API FastAPI sécurisée
+├── agent.py                 # Agent principal avec outils
+├── memory/                  # Mémoire FAISS et historique
+├── tools/                   # Modules outils (PDF, web, calc, todo)
+├── retriever/               # Gestion d’index vectoriel
+├── requirements.txt         # Dépendances Python
+├── .env.example             # Exemple de configuration
+└── readme.md
 
 ---
 
-## 🧠 Mémoire intégrée
+## 🧠 Mémoire IA
 
-* **ConversationBufferWindowMemory** : mémoire courte (10 derniers échanges)
-* **Historique JSON** : sauvegarde complète de toutes les conversations
-* **Recherche vectorielle** (FAISS) : permet à l'IA de "se rappeler" des infos passées
+- `ConversationBufferWindowMemory` : mémoire de chat courte
+- `FAISS` : recherche vectorielle locale
+- `conversation_memory.json` : historique JSON sauvegardé
 
 ---
 
 ## ✨ Bonus possibles
 
-* 🎭 Personnaliser le style du bot (formel, expert, humoristique…)
-* 📝 Télécharger l’historique complet au format `.json`
-* 🔗 Connecter à des sources de données personnelles (Notion, fichiers, etc.)
-* 🎙️ Interface vocale avec `speech_recognition`
+- 🔒 Ajouter authentification OAuth
+- 🎤 Ajout interface vocale (speech recognition)
+- 🧾 Export des conversations
+- 🌍 Ajout d’un nom de domaine + HTTPS via nginx + certbot
+
+---
+
+## 📌 Arrêt / redémarrage EC2
+
+- **Stop instance** : via AWS Console → Instances > Arrêter
+- **Reprise** :
+
+```bash
+ssh -i aiwcs.pem ubuntu@<new_ip>
+tmux attach -t streamlit   # Interface
+tmux attach -t api         # API REST
+```
 
 ---
 
 ## 📜 Licence
 
-MIT – libre à usage personnel ou pédagogique.
-
----
-
-## 🙌 Remerciements
-
-Ce projet a été réalisé dans le cadre d’un challenge LangChain pour développer un assistant IA intelligent, avec mémoire conversationnelle et fonctionnalités utiles.
-
----
+Projet open-source sous licence MIT – usage personnel ou pédagogique.
